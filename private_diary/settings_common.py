@@ -184,7 +184,7 @@ AUTH_USER_MODEL = 'accounts.CustomUser'
 SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = (
-    'allauth.account.auth.backends.AuthenticationBackend', #一般ユーザー用(メールアドレス認証)
+    'allauth.account.auth_backends.AuthenticationBackend', #一般ユーザー用(メールアドレス認証)
     'django.contrib.auth.backends.ModelBackend', # 管理サイト用(ユーザー名認証)
 )
 
@@ -202,3 +202,8 @@ ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
 
 # ログアウトリンクのクリック一発でログアウトする設定
 ACCOUNT_LOGOUT_ON_GET = True
+
+MEDIA_URL = '/media/'
+
+# ログイン後のリダイレクト先
+LOGIN_REDIRECT_URL = 'diary:diary_list'
