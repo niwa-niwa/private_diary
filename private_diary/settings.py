@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 
 from pathlib import Path
+from .settings_common import *
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,9 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'l1r#aau@t6qyu0ltthe#^2q^-xhqbpx487exrhci36eh)nzt$r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOSTS')]
 
 
 # Application definition
@@ -154,6 +155,59 @@ LOGGING ={
     # フォーマッタの設定
     'formatters':{
         'dev':{
+            'format':'\t'.join([
+                '%(asctime)s',
+                '[%(levelname)s]',
+                '%(pathname)s(Line:5(lineno)d)',
+                '%(message)s'
+            ])
+        },
+    }
+}
+
+# 静的ファイルを配置する場所
+STATIC_ROOT = '/usr/share/nginx/html/static'
+MEDIA_ROOT = '/usr/share/nginx/html/media'
+
+# Amazon SES関連設定
+AWS_SES_ACCESS_KEY_ID = os.environ.get('AWS_SES_ACCESS_KEY_ID')
+AWS_SES_SECRET_ACCESS_KEY = os.environ.get('AWS_SES_SECRET_ACCESS_KEY')
+
+#ロギング
+LOGGING = {
+    'version': 1, #1固定
+    'disable.existing_loggers': False,
+
+    #ロガー設定
+    'loggers': {
+        #Djangoが利用するロガー
+        'django':{
+            'handlers':['file'],
+            'level':'INFO',
+        },
+        # diaryアプリケーションが利用するロガー
+        'diary':{
+            'handlers':['file'],
+            'level':'INFO',
+        },
+    },
+
+    # ハンドラの設定
+    'handlers':{
+        'file':{
+            'level':'INFO',
+            'class':'logging.handlers.TimedRotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/django.log'),
+            'formatter':'prod',
+            'when':'D',
+            'interval':1,
+            'backupCount':7,
+        },
+    },
+
+    # フォーマッタの設定
+    'formatters':{
+        'prod':{
             'format':'\t'.join([
                 '%(asctime)s',
                 '[%(levelname)s]',
