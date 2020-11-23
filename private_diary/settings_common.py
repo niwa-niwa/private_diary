@@ -207,3 +207,7 @@ MEDIA_URL = '/media/'
 
 # ログイン後のリダイレクト先
 LOGIN_REDIRECT_URL = 'diary:diary_list'
+
+# バックアップバッチ用
+BACKUP_PATH = 'backup/'
+NUM_SAVED_BACKUP = 30
